@@ -31,15 +31,19 @@ def tine_length(frequency, youngs_modulus, density, thickness):
     return length
 
 
-# Calculate every note in every material and compare with the hand values.
+# Calculate every note in every material, compare with the hand values
+# and save one row per note and material to the results file.
 # Only runs when this file is run directly, not when another file imports it.
 if __name__ == "__main__":
-    with open("tine_lengths_report_table.csv") as file:
+    with open("tine_lengths_report_table.csv") as file, open("tine_lengths_results.csv", "w", newline="") as results_file:
         reader = csv.DictReader(file)
+        writer = csv.writer(results_file)
+        writer.writerow(["note", "frequency_hz", "material", "hand_cm", "calculated_cm", "percent_difference"])
         for row in reader:
             frequency = float(row["frequency_hz"])
             for material_name, properties in materials.items():
                 hand_cm = float(row[material_name])
                 calculated_cm = tine_length(frequency, properties["E"], properties["rho"], properties["t"]) * 100
                 percent_difference = (calculated_cm - hand_cm) / hand_cm * 100
-                print(f"{row['note']:<4} {material_name:<20} calculated {calculated_cm:.2f} cm   hand {hand_cm:.2f} cm   difference {percent_difference:+.2f}%")
+                writer.writerow([row["note"], frequency, material_name, hand_cm, round(calculated_cm, 2), round(percent_difference, 2)])
+    print("Saved results to tine_lengths_results.csv")
