@@ -31,13 +31,15 @@ def tine_length(frequency, youngs_modulus, density, thickness):
     return length
 
 
-# Calculate every note in every material and compare with the hand values
-with open("tine_lengths_report_table.csv") as file:
-    reader = csv.DictReader(file)
-    for row in reader:
-        frequency = float(row["frequency_hz"])
-        for material_name, properties in materials.items():
-            hand_cm = float(row[material_name])
-            calculated_cm = tine_length(frequency, properties["E"], properties["rho"], properties["t"]) * 100
-            percent_difference = (calculated_cm - hand_cm) / hand_cm * 100
-            print(f"{row['note']:<4} {material_name:<20} calculated {calculated_cm:.2f} cm   hand {hand_cm:.2f} cm   difference {percent_difference:+.2f}%")
+# Calculate every note in every material and compare with the hand values.
+# Only runs when this file is run directly, not when another file imports it.
+if __name__ == "__main__":
+    with open("tine_lengths_report_table.csv") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            frequency = float(row["frequency_hz"])
+            for material_name, properties in materials.items():
+                hand_cm = float(row[material_name])
+                calculated_cm = tine_length(frequency, properties["E"], properties["rho"], properties["t"]) * 100
+                percent_difference = (calculated_cm - hand_cm) / hand_cm * 100
+                print(f"{row['note']:<4} {material_name:<20} calculated {calculated_cm:.2f} cm   hand {hand_cm:.2f} cm   difference {percent_difference:+.2f}%")
