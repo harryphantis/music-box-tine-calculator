@@ -2,6 +2,7 @@
 # Calculates tine lengths from L = sqrt(0.162 * t * sqrt(E / rho) / f)
 # and compares them with hand-calculated values. All units are SI.
 
+import csv
 import math
 
 # Material properties. Keys match the column names in the CSV.
@@ -30,6 +31,13 @@ def tine_length(frequency, youngs_modulus, density, thickness):
     return length
 
 
-# Temporary test: one note (A4, 440 Hz) in brass
-brass = materials["brass_1mm_cm"]
-print(tine_length(440, brass["E"], brass["rho"], brass["t"]) * 100, "cm")
+# Calculate every note in every material and compare with the hand values
+with open("tine_lengths_report_table.csv") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        frequency = float(row["frequency_hz"])
+        for material_name, properties in materials.items():
+            hand_cm = float(row[material_name])
+            calculated_cm = tine_length(frequency, properties["E"], properties["rho"], properties["t"]) * 100
+            percent_difference = (calculated_cm - hand_cm) / hand_cm * 100
+            print(f"{row['note']:<4} {material_name:<20} calculated {calculated_cm:.2f} cm   hand {hand_cm:.2f} cm   difference {percent_difference:+.2f}%")
