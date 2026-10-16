@@ -1,0 +1,4 @@
+# Files Git should never save
+
+# Python's compiled cache files, recreated automatically when code runs
+__pycache__/
