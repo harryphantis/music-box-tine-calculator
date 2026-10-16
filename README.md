@@ -80,3 +80,9 @@ The first command writes `tine_lengths_results.csv`. The second prints the back-
 | `tine_lengths_report_table.csv` | Notes, frequencies and hand-calculated lengths from the report |
 | `tine_lengths_results.csv` | Output: calculated lengths and percentage differences for all 48 tines |
 | `DECISIONS.md` | Log of decisions and reasoning |
+
+## Later
+
+Ideas left out to keep the project in scope:
+
+- A log-log chart of tine length against frequency for each material. Since L is proportional to f^(-1/2), each material should give a straight line with a slope of -1/2.
